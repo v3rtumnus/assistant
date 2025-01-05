@@ -10,6 +10,7 @@ pipeline {
             steps {
                 git credentialsId: 'github-ssh',
                     url: 'git@github.com:v3rtumnus/assistant.git'
+                    branch: 'main'
             }
         }
 
