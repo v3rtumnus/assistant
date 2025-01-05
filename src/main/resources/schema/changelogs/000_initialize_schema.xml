@@ -1,0 +1,30 @@
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+    <changeSet id="add_document_tables" author="michael">
+        <createTable tableName="imported_document">
+            <column name="id" type="bigint" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="path" type="varchar(2000)">
+                <constraints nullable="true" />
+            </column>
+            <column name="last_modified" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <createTable tableName="imported_document_part">
+            <column name="id" type="varchar(255)" autoIncrement="false">
+                <constraints primaryKey="true" nullable="false" />
+            </column>
+            <column name="document_id" type="bigint">
+                <constraints nullable="true" />
+            </column>
+        </createTable>
+        <addForeignKeyConstraint  baseColumnNames="document_id"
+                                  baseTableName="imported_document_part"
+                                  constraintName="fk_document_part"
+                                  referencedColumnNames="id"
+                                  referencedTableName="imported_document"
+                                  validate="true"/>
+    </changeSet>
+</databaseChangeLog>
