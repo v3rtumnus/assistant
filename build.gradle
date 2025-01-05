@@ -60,5 +60,5 @@ tasks.named('test') {
 bootJar {
 	launchScript()
 
-	archiveBaseName = "assistant"
+	archiveFileName = "assistant.jar"
 }
