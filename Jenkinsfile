@@ -22,10 +22,10 @@ pipeline {
 
         stage('Deploy service') {
             steps {
-                sh 'docker-compose -f /var/assistant-data/docker-compose.yml -p assistant down'
+                sh 'docker compose -f /var/assistant-data/docker-compose.yml -p assistant down'
                 sh 'cp build/libs/assistant.jar /var/assistant-data/docker'
-                sh 'docker-compose -f /var/assistant-data/docker-compose.yml -p assistant build'
-                sh 'docker-compose -f /var/assistant-data/docker-compose.yml -p assistant up -d'
+                sh 'docker compose -f /var/assistant-data/docker-compose.yml -p assistant build'
+                sh 'docker compose -f /var/assistant-data/docker-compose.yml -p assistant up -d'
             }
         }
     }
