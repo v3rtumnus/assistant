@@ -4,6 +4,7 @@ import at.altenburger.assistant.config.LoggingMcpToolCallbackProvider;
 import io.modelcontextprotocol.client.McpSyncClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -26,8 +27,14 @@ public class ChatGeneratorService {
     public String generate(String message) {
         log.info("Got request for message: {}", message);
 
-        return chatClient.prompt(message)
+        String response =  chatClient.prompt(message)
                 .call()
                 .content();
+
+        log.info("Response: {}", response);
+
+        return response;
     }
+
+    
 }
