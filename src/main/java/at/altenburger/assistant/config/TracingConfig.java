@@ -1,0 +1,45 @@
+package at.altenburger.assistant.config;
+
+import io.micrometer.tracing.Tracer;
+import io.micrometer.tracing.otel.bridge.OtelBaggageManager;
+import io.micrometer.tracing.otel.bridge.OtelCurrentTraceContext;
+import io.micrometer.tracing.otel.bridge.OtelTracer;
+import io.opentelemetry.api.OpenTelemetry;
+import io.opentelemetry.context.propagation.ContextPropagators;
+import io.opentelemetry.sdk.OpenTelemetrySdk;
+import io.opentelemetry.sdk.trace.SdkTracerProvider;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+
+import java.util.Collections;
+
+/**
+ * Configuration for distributed tracing.
+ * Provides a default Tracer bean when none is auto-configured.
+ */
+@Configuration
+public class TracingConfig {
+
+    @Bean
+    @ConditionalOnMissingBean
+    public OpenTelemetry openTelemetry() {
+        SdkTracerProvider tracerProvider = SdkTracerProvider.builder().build();
+        return OpenTelemetrySdk.builder()
+                .setTracerProvider(tracerProvider)
+                .build();
+    }
+
+    @Bean
+    @ConditionalOnMissingBean
+    public Tracer tracer(OpenTelemetry openTelemetry) {
+        io.opentelemetry.api.trace.Tracer otelTracer = openTelemetry.getTracer("assistant");
+        OtelCurrentTraceContext currentTraceContext = new OtelCurrentTraceContext();
+        OtelBaggageManager baggageManager = new OtelBaggageManager(
+                currentTraceContext,
+                Collections.emptyList(),
+                Collections.emptyList()
+        );
+        return new OtelTracer(otelTracer, currentTraceContext, event -> {}, baggageManager);
+    }
+}
