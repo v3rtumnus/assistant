@@ -111,7 +111,6 @@ public enum EntityType {
 
     // Smart Home
     HOME_ROOM("ROOM"),
-    HOME_DEVICE("DEVICE"),
     HOME_ZONE("ZONE"),
     HOME_SCENE("SCENE"),
 

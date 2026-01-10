@@ -66,6 +66,8 @@ public class AnonymizationResult {
 
     /**
      * De-anonymize a text by replacing all placeholders with original values.
+     * Handles both bracketed [DEVICE_1] and unbracketed DEVICE_1 formats,
+     * as LLMs sometimes strip the brackets when using placeholders in tool calls.
      */
     public String deanonymize(String text) {
         if (text == null || placeholderToEntity.isEmpty()) {
@@ -74,7 +76,18 @@ public class AnonymizationResult {
 
         String result = text;
         for (Map.Entry<String, AnonymizedEntity> entry : placeholderToEntity.entrySet()) {
-            result = result.replace(entry.getKey(), entry.getValue().getOriginalValue());
+            String placeholder = entry.getKey();
+            String originalValue = entry.getValue().getOriginalValue();
+
+            // Replace bracketed version: [DEVICE_1]
+            result = result.replace(placeholder, originalValue);
+
+            // Also replace unbracketed version: DEVICE_1
+            // LLMs sometimes strip brackets when using placeholders in tool parameters
+            if (placeholder.startsWith("[") && placeholder.endsWith("]")) {
+                String unbracketed = placeholder.substring(1, placeholder.length() - 1);
+                result = result.replace(unbracketed, originalValue);
+            }
         }
         return result;
     }

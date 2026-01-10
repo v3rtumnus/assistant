@@ -207,8 +207,8 @@ public class StdioMcpClient implements McpClient {
             span.tag("mcp.duration_ms", String.valueOf(duration));
             span.tag("mcp.result.size", String.valueOf(result.toString().length()));
             
-            log.info("MCP tool call completed: server={}, tool={}, duration={}ms, result_size={} bytes", 
-                serverName, toolName, duration, result.toString().length());
+            log.info("MCP tool call completed: server={}, tool={}, duration={}ms, result={}",
+                serverName, toolName, duration, result);
             
             return result;
         } catch (Exception e) {
